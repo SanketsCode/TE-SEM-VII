@@ -1,0 +1,28 @@
+Object Oriented Modeling And Design
+
+1. Draw state model for telephone line, with various activities.
+2. Draw basic class diagrams to identify and describe key concepts like
+classes, types in your system and their relationships.
+3. Draw one or more Use Case diagrams for capturing and representing requirements of
+the system. Use case diagrams must include template showing description and steps of the
+Use Case for various scenarios.
+4. Draw one or more Use Case diagrams for capturing and representing requirements of
+the system. Use case diagrams must include template showing description and steps of the
+Use Case for various scenarios.
+5. Draw activity diagrams to display either business flows or like flow
+charts
+6. Draw component diagrams assuming that you will build your system
+reusing existing components along with a few new ones
+7. Draw deployment diagrams to model the runtime architecture of your system.
+
+
+Mini Projects -
+
+
+8. Mini Project: Draw all UML diagrams for your project work.
+9. Mini Project - Develop a Blockchain based application for health related medical records
+Draw following UML Diagrams for Bank Management application
+a. Class Diagram
+b. Object Diagram
+c. ER Diagram
+d. Component Diagram

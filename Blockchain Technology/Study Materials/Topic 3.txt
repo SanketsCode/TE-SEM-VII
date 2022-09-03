@@ -1,0 +1,8 @@
+Blockchain Platforms and Consensus in Blockchain
+
+Types of Blockchain Platforms: Public, Private and Consortium, Bitcoin, Ethereum,
+Hyperledger,IoTA, Corda, R3.
+
+Consensus in Blockchain: Consensus Approach, Consensus Elements, Consensus
+Algorithms, Proof of Work, Byzantine General problem, Proof of Stake, Proof of Elapsed
+Time, Proof of Activity, Proof of Burn.

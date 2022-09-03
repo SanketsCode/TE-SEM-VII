@@ -1,0 +1,12 @@
+Feature Engineering
+
+History, Centralized Vs. Decentralized Systems, 
+Layers of Blockchain: 
+- Application Layer,
+- Execution Layer, 
+- Semantic Layer, 
+- Propagation Layer,
+- Consensus Layer, 
+Why is Block chain important? 
+Limitations of Centralized Systems, 
+Blockchain Adoption So Far.

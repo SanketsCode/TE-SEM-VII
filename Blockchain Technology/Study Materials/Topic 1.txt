@@ -1,0 +1,7 @@
+Mathematical Foundation for Blockchain
+
+Cryptography: Symmetric Key Cryptography and Asymmetric Key Cryptography, 
+Elliptic Curve
+Cryptography (ECC), 
+Cryptographic Hash Functions: SHA256, Digital Signature Algorithm (DSA), 
+Merkel Trees.

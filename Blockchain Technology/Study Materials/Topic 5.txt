@@ -1,0 +1,10 @@
+Blockchain Ethereum Platform using Solidity
+
+What is Ethereum, 
+Types of Ethereum Networks, 
+EVM (Ethereum Virtual Machine), 
+Introduction to smart contracts, 
+Purpose and types of Smart Contracts, 
+Implementing and deploying smart contracts using Solidity, 
+Swarm (Decentralized Storage Platform),
+Whisper (Decentralized Messaging Platform)

@@ -1,0 +1,28 @@
+Introduction: historical perspective, Definition, Core Components, 
+Customers suppliers and process,
+Objectives of Testing, 
+Testing and Debugging, 
+Need of Testing, 
+Quality Assurance and Testing, 
+Why Software has Errors, 
+Defects and Failures and its Causes and Effects, 
+Total Quality Management(TQM),
+Quality practices of TQM, 
+Quality Management through- Statistical process Control, 
+Cultural Changes,
+Continual Improvement cycle, 
+Benchmarking and metrics, 
+Problem Solving Techniques and Software Tools.
+Software Quality, 
+Constraints of Software product Quality assessment,
+Quality and Productivity 
+Relationship, 
+Requirements of Product, 
+Software Development Process, 
+Types of Products, Software
+Development Lifecycle Models, 
+Software Quality Management, 
+Processes related to Software Quality,
+Quality Management System‘s Structure, 
+Pillars of Quality Management System, 
+Important aspects of quality management.

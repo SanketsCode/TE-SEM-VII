@@ -1,0 +1,17 @@
+1. Write TEST Scenario for Gmail Login Page
+
+2. Test Scenario for Gmail Login Page
+
+3. Write Test cases in excel sheet for Social Media application or website
+
+4. Create Defect Report for Any application or web application
+
+5. Installation of Selenium grid and selenium Web driver java eclipse (automation tools).
+
+6. Prepare Software requirement specification for any project or problem statement
+
+
+Mini Project : Create a small web-based application by selecting relevant system environment / 
+platform and programming languages. Narrate concise Test Plan consisting features to be tested 
+and bug taxonomy. Narrate scripts in order to perform regression tests. Identify the bugs using 
+Selenium WebDriver and IDE and generate test reports encompassing exploratory testing.

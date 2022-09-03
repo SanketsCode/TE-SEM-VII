@@ -1,0 +1,8 @@
+Test Planning – Artifacts, Strategy, 
+Test Organization – Test Manager &amp; Tester Role, 
+Test plan purpose &amp; contents, Test Strategy and Approach, Test cases &amp; Test Data, Test
+Entry-Exit criteria, Test Execution Schedule, Use case Testing, Scenario Testing, Test Monitoring
+&amp; Control- Test Metrics –Test Case Productivity, Test case Coverage, Defect Acceptance
+&amp; Rejection, Test Efficiency, Efforts and Schedule Variance, Test Efforts biasing Factors,
+Test Report &amp; configuration Management, Quality Assurance Process, Documentation Risk
+&amp; Issues. Software Quality, Quality Management Importance, Quality Best practices.
