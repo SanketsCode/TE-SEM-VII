@@ -1,0 +1,42 @@
+Practical 1
+
+Practical  - Write a program to calculate Fibonacci numbers and find its step count.
+
+Codes - 
+
+package sanketscode;
+
+import java.util.Scanner;
+
+public class FibonacciSeries {
+
+	public static void main(String[] args) {
+		
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Enter Number - ");
+		int num = sc.nextInt();
+		if(num <= 1) {
+			System.out.println(num);
+			return;
+		}
+		
+		int a=0;
+		int b=1;
+		System.out.println(a);
+	
+		
+		for(int i=1;i< num;i++) {
+			System.out.println(b);
+			int temp =a;
+			a=b;
+			b+=temp;
+		}
+		
+
+	}
+
+}
+
+
+Explanation - In these program we are getting fibonacci series numbers if we want n number of  series then the complexity or step becomes o(n) so here in these program
+The steps are 10 are regular and 4 are depend on number means ( n ) so 10 + 4(n) steps are required.
