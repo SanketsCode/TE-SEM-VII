@@ -1,0 +1,32 @@
+pragma solidity 0.8.7;
+
+contract Student{
+
+     struct Stud{
+         string name;
+         uint roll_no;
+         string branch;
+         uint[] marks;
+     }
+
+     Stud student;
+     function addStudentData(string memory _name,uint _roll_no,string memory _branch,uint[] memory _marks) public {
+          student = Stud(_name,_roll_no,_branch,_marks);
+     }
+
+     
+     function getStudentName()view public returns(string memory){
+         return student.name;
+     }
+
+     function getStudentRoll_no()view public returns(uint ){
+          return student.roll_no;
+     }
+
+     function getStudentBranch()view public returns(string memory){
+          return student.branch;
+     }
+
+     function getStudentMarks()view public returns(uint[] memory){
+          return student.marks; }
+}

@@ -1,0 +1,219 @@
+Implement K-Nearest Neighbors algorithm on diabetes.csv dataset. Compute confusion matrix, accuracy, error rate, precision and recall on the given dataset.
+Dataset link : https://www.kaggle.com/datasets/abdallamahgoub/diabetes
+
+
+
+
+Code
+
+# Importing libraries
+import pandas as pd 
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import warnings
+warnings.filterwarnings('ignore')
+
+
+
+
+dataset = pd.read_csv('C:/Users/NN/N/diabetes.csv')
+
+
+
+
+
+# Preview data
+dataset.head()
+
+
+
+
+# Dataset dimensions - (rows, columns)
+dataset.shape
+
+
+
+
+# Features data-type
+dataset.info()
+
+
+
+
+# Statistical summary
+dataset.describe().T
+
+
+
+
+# Count of null values
+dataset.isnull().sum()
+
+
+
+
+# Outcome countplot
+sns.countplot(x = 'Outcome',data = dataset)
+
+
+
+
+# Histogram of each feature
+import itertools
+col = dataset.columns[:8]
+plt.subplots(figsize = (20, 15))
+length = int(len(col))
+for i, j in itertools.zip_longest(col, range(length)):
+    plt.subplot(int(length/2), 3, j + 1)
+    plt.subplots_adjust(wspace = 0.1,hspace = 0.5)
+    dataset[i].hist(bins = 20)
+    plt.title(i)
+plt.show()
+
+
+
+
+# Pairplot 
+sns.pairplot(data = dataset, hue = 'Outcome')
+plt.show()
+
+
+
+
+# Heatmap
+sns.heatmap(dataset.corr(), annot = True)
+plt.show()
+
+
+
+
+dataset_new = dataset
+
+
+
+
+# Replacing zero values with NaN
+dataset_new[["Glucose", "BloodPressure", "SkinThickness", "Insulin", "BMI"]] = dataset_new[["Glucose", "BloodPressure", "SkinThickness", "Insulin", "BMI"]].replace(0, np.NaN)
+
+
+
+
+# Count of NaN
+dataset_new.isnull().sum()
+
+
+
+
+# Replacing NaN with mean values
+dataset_new["Glucose"].fillna(dataset_new["Glucose"].mean(), inplace = True)
+dataset_new["BloodPressure"].fillna(dataset_new["BloodPressure"].mean(), inplace = True)
+dataset_new["SkinThickness"].fillna(dataset_new["SkinThickness"].mean(), inplace = True)
+dataset_new["Insulin"].fillna(dataset_new["Insulin"].mean(), inplace = True)
+dataset_new["BMI"].fillna(dataset_new["BMI"].mean(), inplace = True)
+
+
+
+
+# Statistical summary
+dataset_new.describe().T
+
+
+
+
+# Feature scaling using MinMaxScaler
+from sklearn.preprocessing import MinMaxScaler
+sc = MinMaxScaler(feature_range = (0, 1))
+dataset_scaled = sc.fit_transform(dataset_new)
+
+
+
+
+dataset_scaled = pd.DataFrame(dataset_scaled)
+
+
+
+
+# Selecting features - [Glucose, Insulin, BMI, Age]
+X = dataset_scaled.iloc[:, [1, 4, 5, 7]].values
+Y = dataset_scaled.iloc[:, 8].values
+
+
+
+# Splitting X and Y
+from sklearn.model_selection import train_test_split
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = 0.20, random_state = 42, stratify = dataset_new['Outcome'] )
+
+
+
+
+# Checking dimensions
+print("X_train shape:", X_train.shape)
+print("X_test shape:", X_test.shape)
+print("Y_train shape:", Y_train.shape)
+print("Y_test shape:", Y_test.shape)
+
+
+
+
+# Plotting a graph for n_neighbors 
+from sklearn import metrics
+from sklearn.neighbors import KNeighborsClassifier
+X_axis = list(range(1, 31))
+acc = pd.Series()
+x = range(1,31)
+for i in list(range(1, 31)):
+    knn_model = KNeighborsClassifier(n_neighbors = i) 
+    knn_model.fit(X_train, Y_train)
+    prediction = knn_model.predict(X_test)
+    acc = acc.append(pd.Series(metrics.accuracy_score(prediction, Y_test)))
+plt.plot(X_axis, acc)
+plt.xticks(x)
+plt.title("Finding best value for n_estimators")
+plt.xlabel("n_estimators")
+plt.ylabel("Accuracy")
+plt.grid()
+plt.show()
+print('Highest value: ',acc.values.max())
+
+
+
+
+# K nearest neighbors Algorithm
+from sklearn.neighbors import KNeighborsClassifier
+knn = KNeighborsClassifier(n_neighbors = 24, metric = 'minkowski', p = 2)
+knn.fit(X_train, Y_train)
+
+
+
+
+Y_pred_knn = knn.predict(X_test)
+
+
+
+
+from sklearn.metrics import accuracy_score
+accuracy_knn = accuracy_score(Y_test, Y_pred_knn)
+
+
+
+
+print("K Nearest neighbors: " + str(accuracy_knn * 100))
+
+
+
+
+# Confusion matrix
+from sklearn.metrics import confusion_matrix
+cm = confusion_matrix(Y_test, Y_pred_knn)
+cm
+
+
+
+
+# Heatmap of Confusion matrix
+sns.heatmap(pd.DataFrame(cm), annot=True)
+
+
+
+

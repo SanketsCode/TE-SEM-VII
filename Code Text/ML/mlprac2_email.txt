@@ -1,0 +1,124 @@
+Classify the email using the binary classification method. Email Spam detection has two states: a) Normal State – Not Spam, b) Abnormal State – Spam. Use K-Nearest Neighbors and Support Vector Machine for classification. Analyze their performance.
+Dataset link: The emails.csv dataset on the Kaggle
+
+https://www.kaggle.com/datasets/balaka18/email-spam-classification-dataset-csv
+
+Code
+
+
+import pandas as pd
+import numpy as np
+import seaborn as sns
+
+
+A = pd.read_csv("/Users/admin/Desktop/7 sem/machine learning/practical/dataset/emails.csv")
+
+
+
+A.head()
+
+
+A.info()
+
+
+A.isna().sum()
+
+
+A.describe()
+
+
+A.shape
+
+
+A.corr()
+
+
+column_name = A.columns
+column_name
+
+
+A.groupby(by=["Prediction"]).count().sum()
+
+
+import matplotlib.pyplot as plt
+print("Visualizing ratio Ham/Spam:\n")
+count_Class = pd.value_counts(A['Prediction'], sort=True)
+count_Class.plot(kind = 'pie',labels=['Not Spam','Spam'], autopct='%1.0f%%,')
+plt.title('Not Spam vs Spam')
+plt.ylabel('')
+plt.show
+
+
+X = A.iloc[:,1:3001]
+X
+
+
+Y = A.iloc[:,-1].values
+Y
+
+
+from sklearn.model_selection import train_test_split
+xtrain,xtest,ytrain,ytest = train_test_split(X,Y,test_size=0.30)
+
+
+# Plotting a graph for n_neighbors 
+from sklearn import metrics
+from sklearn.neighbors import KNeighborsClassifier
+X_axis = list(range(1, 31))
+acc = pd.Series()
+x = range(1,31)
+for i in list(range(1, 31)):
+    knn_model = KNeighborsClassifier(n_neighbors = i) 
+    knn_model.fit(xtrain, ytrain)
+    prediction = knn_model.predict(xtest)
+    acc = acc.append(pd.Series(metrics.accuracy_score(prediction, ytest)))
+plt.plot(X_axis, acc)
+plt.xticks(x)
+plt.title("Finding best value for n_estimators")
+plt.xlabel("n_estimators")
+plt.ylabel("Accuracy")
+plt.grid()
+plt.show()
+print('Highest value: ',acc.values.max())
+
+
+knn_model = KNeighborsClassifier(n_neighbors = i) 
+knn_model.fit(xtrain, ytrain)
+predicted = knn_model.predict(xtest)
+from sklearn.metrics import confusion_matrix 
+cm = confusion_matrix(ytest, predicted)
+from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score, classification_report, confusion_matrix
+print("F1 score",f1_score(ytest,predicted, average="macro"))
+print("Precision",precision_score(ytest,predicted, average="macro"))
+print("Recall",recall_score(ytest,predicted, average="macro"))
+print ("Accuracy : ",accuracy_score(ytest,predicted)*100)
+target_labels = ['not spam','Spam']
+print(classification_report(predicted, ytest, target_names=target_labels))
+cm = confusion_matrix(ytest, predicted)
+group_names = ['True Neg','False Pos','False Neg','True Pos']
+group_counts = ["{0:0.0f}".format(value) for value in cm.flatten()]
+labels = [f"{v1}\n{v2}" for v1, v2, in zip(group_names,group_counts)]
+labels = np.asarray(labels).reshape(2,2)
+sns.heatmap(cm, annot=labels, fmt='')
+
+
+from sklearn.svm import SVC
+svc = SVC(C=1.0,kernel='rbf',gamma='auto')         
+# C here is the regularization parameter. Here, L2 penalty is used(default). It is the inverse of the strength of regularization.
+# As C increases, model overfits.
+# Kernel here is the radial basis function kernel.
+# gamma (only used for rbf kernel) : As gamma increases, model overfits.
+svc.fit(xtrain,ytrain)
+y_pred2 = svc.predict(xtest)
+print("Accuracy Score for SVC : ", accuracy_score(y_pred2,ytest))
+print("F1 score",f1_score(ytest,y_pred2, average="macro"))
+print("Precision",precision_score(ytest,y_pred2, average="macro"))
+print("Recall",recall_score(ytest,y_pred2, average="macro"))
+target_labels = ['not spam','Spam']
+print(classification_report(y_pred2, ytest, target_names=target_labels))
+cm = confusion_matrix(ytest, y_pred2)
+group_names = ['True Neg','False Pos','False Neg','True Pos']
+group_counts = ["{0:0.0f}".format(value) for value in cm.flatten()]
+labels = [f"{v1}\n{v2}" for v1, v2, in zip(group_names,group_counts)]
+labels = np.asarray(labels).reshape(2,2)
+sns.heatmap(cm, annot=labels, fmt='')

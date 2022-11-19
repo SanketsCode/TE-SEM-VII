@@ -1,0 +1,31 @@
+
+Practical 3 for Bank 
+
+Code 
+
+
+pragma solidity 0.5.1;
+
+contract Customer{
+    uint public balance = 0;
+    string public account_holder = "sanket";
+    uint public account_number = 123456789;
+  
+    event Increment(uint value);
+    event Decrement(uint value);
+
+    //writing function for adding Balance to Account
+    function Credit_Balance(uint _balance) public{
+        balance += _balance;
+    }
+
+    function Debit_Balance(uint _balance) public{
+        balance -= _balance;
+    }
+
+    function show_balance()view public returns(uint){
+        return balance;
+    }
+
+}
+

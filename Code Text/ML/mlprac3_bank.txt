@@ -1,0 +1,258 @@
+Given a bank customer, build a neural network-based classifier that can determine whether they will leave or not in the next 6 months.
+Dataset Description: The case study is from an open-source dataset from Kaggle.
+Predict the price of the Uber ride from a given pickup point to the agreed drop-off location.The dataset contains 10,000 sample points with 14 distinct features such asCustomerId, CreditScore, Geography, Gender, Age, Tenure, Balance, etc. Link to the Kaggle project: https://www.kaggle.com/barelydedicated/bank-customer-churn-modeling Perform following steps:
+1. Read the dataset.
+2. Distinguish the feature and target set and divide the data set into training and test sets.
+3. Normalize the train and test data.
+4. Initialize and build the model. Identify the points of improvement and implement the same. 5. Print the accuracy score and confusion matrix (5 points).
+
+Dataset:- https://www.kaggle.com/barelydedicated/bank-customer-churn-modeling 
+
+
+Code
+
+
+import pandas as pd
+import numpy as np
+import tensorflow as tf
+from tensorflow import keras
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.metrics import confusion_matrix, classification_report
+import os
+%matplotlib inline
+
+
+df = pd.read_csv("/Users/admin/Desktop/7 sem/machine learning/practical/dataset/Churn_Modelling.csv")
+
+
+df.head()
+
+
+df.info()
+
+
+df.isna().sum()
+
+
+df.describe()
+
+
+df.drop(['RowNumber','CustomerId','Surname'],axis=1,inplace=True)
+
+
+df.dtypes
+
+
+df.Exited.value_counts()
+
+
+df.shape
+
+
+df.isna().sum()
+
+
+cat_cols=['Geography','Gender']
+num_cols=[col for col in df.columns if col not in cat_cols]
+
+
+for col in cat_cols:
+    print(f'{col} : {df[col].unique()}')
+
+
+df['Gender'].replace({'Female':1,'Male':0},inplace=True)
+
+
+df=pd.get_dummies(data=df, columns=['Geography'])
+
+
+tenure_exited_0=df[df.Exited==0].Tenure
+tenure_exited_1=df[df.Exited==1].Tenure
+plt.figure(figsize=(10,8))
+plt.xlabel('T enure')
+plt.ylabel('Number of Customers Exited')
+plt.title('Bank Customer Churn prediction visualization')
+plt.hist([tenure_exited_1,tenure_exited_0], color=['Purple','red'], label=['Exited-yes','Exited-No'])
+plt.legend()
+
+
+creditscore_exited_0=df[df.Exited==0].CreditScore
+creditscore_exited_1=df[df.Exited==1].CreditScore
+plt.figure(figsize=(10,8))
+plt.xlabel('Credit Score')
+plt.ylabel('Number of Customers Exited')
+plt.title('Bank Customer Churn prediction visualization')
+plt.hist([creditscore_exited_1,creditscore_exited_0], color=['green','red'], label=['Exited-yes','Exited-No'])
+plt.legend()
+
+
+NumOfProducts_exited_0=df[df.Exited==0].NumOfProducts
+NumOfProducts_exited_1=df[df.Exited==1].NumOfProducts
+plt.figure(figsize=(10,8))
+plt.xlabel('NumOfProducts')
+plt.ylabel('Number of Customers Exited')
+plt.title('Bank Customer Churn prediction visualization')
+plt.hist([NumOfProducts_exited_1,NumOfProducts_exited_0], color=['green','red'], label=['Exited-yes','Exited-No'])
+plt.legend()
+
+
+Age_exited_0=df[df.Exited==0].Age
+Age_exited_1=df[df.Exited==1].Age
+plt.figure(figsize=(10,8))
+plt.xlabel('Age')
+plt.ylabel('Number of Customers Exited')
+plt.title('Bank Customer Churn prediction visualization')
+plt.hist([Age_exited_1,Age_exited_0], color=['green','red'], label=['Exited-yes','Exited-No'])
+plt.legend()
+
+
+# Scaling
+cols_to_scale=['CreditScore','Tenure','Balance','NumOfProducts','EstimatedSalary','Age']
+from sklearn.preprocessing import MinMaxScaler
+scaler=MinMaxScaler()
+df[cols_to_scale]=scaler.fit_transform(df[cols_to_scale])
+
+
+# Training
+x=df.drop('Exited',axis=1)
+y=df.Exited
+from sklearn.model_selection import train_test_split
+xtrain,xtest,ytrain,ytest=train_test_split(x,y,test_size=0.25,random_state=15,stratify=y)
+
+
+
+
+
+
+
+
+def ANN(xtrain,xtest,ytrain,ytest,loss,weight):
+    model=keras.Sequential([
+    keras.layers.Dense(20,input_shape=(12,),activation='relu'),
+    keras.layers.Dense(1,activation='sigmoid')
+    ])
+
+    model.compile(optimizer='adam',
+                 loss=loss,
+                 metrics=['accuracy'])
+    
+    if weight==-1:
+        model.fit(xtrain,ytrain,epochs=100)
+    else:
+        model.fit(xtrain,ytrain,epochs=100,class_weight=weight)
+    print()
+    print(model.evaluate(xtest,ytest))
+    print()
+    ypred= model.predict(xtest)
+    ypred=np.round(ypred)
+    print()
+    print(classification_report(ytest,ypred))
+        
+    return ypred
+
+
+
+
+
+
+ypred=ANN(xtrain,xtest,ytrain,ytest,'binary_crossentropy',-1)
+
+
+
+
+
+
+cm=tf.math.confusion_matrix(labels=ytest,predictions=ypred)
+plt.figure(figsize=(10,7))
+sns.heatmap(cm,annot=True,fmt='d')
+plt.xlabel('predicted')
+plt.ylabel('Truth')
+
+
+
+
+
+trd = df[["Exited"]].values
+
+
+
+trd.shape
+
+
+
+xtrain = []
+ytrain = []
+for i in range(180,10000,1):
+    xtrain.append(trd[i-180:i])
+    ytrain.append(trd[i:i+1])  
+
+
+
+from sklearn.preprocessing import MinMaxScaler
+mm = MinMaxScaler()
+trd = mm.fit_transform(trd)
+
+
+type(xtrain)
+
+
+
+xtr = np.array(xtrain)
+
+
+
+xtr.shape
+
+
+ytr = np.array(ytrain)
+
+
+ytr.shape
+
+
+ytr
+
+
+from keras.models import Sequential
+from keras.layers import LSTM,Dense,Dropout
+from keras.callbacks import EarlyStopping
+nn = Sequential()
+es = EarlyStopping(patience=50)
+nn.add(LSTM(50,return_sequences=True,input_shape=(180,1)))
+nn.add(LSTM(100,return_sequences=True))
+nn.add(Dense(1))
+nn.compile(optimizer='adam', loss = 'binary_crossentropy', metrics=['accuracy'])
+history = nn.fit(xtr,ytr,epochs=50,callbacks=es,validation_split=0.2)
+
+
+
+
+p1 =nn.predict(xtr[10000:10180])
+p1
+
+
+
+plt.plot(np.array(history.history['accuracy']) * 100)
+plt.plot(np.array(history.history['val_accuracy']) * 100)
+plt.ylabel('accuracy')
+plt.xlabel('epochs')
+plt.legend(['train', 'validation'])
+plt.title('Accuracy over epochs')
+plt.show()
+
+
+
+p2 = np.reshape(p1,(180,1))
+
+
+
+mm.inverse_transform(p2)
+
+
+
+
+
+
+
+
