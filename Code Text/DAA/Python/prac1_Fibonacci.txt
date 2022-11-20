@@ -1,0 +1,36 @@
+Problem statement:-   Write a program non-recursive and recursive program to calculate Fibonacci numbers and analyze their time and space complexity.
+
+
+For printing the time complexity for non-recursive put comment I.e # on 3rd last line and in recursive put hash on 2nd last line
+
+
+
+Code
+
+
+
+import time
+def fibononrec(n):
+    prevNum = 0
+    currentNum = 1
+    for i in range(1, n):
+        prevPrevNum = prevNum
+        prevNum = currentNum
+        currentNum = prevNum + prevPrevNum
+    return currentNum
+    
+def fiborec(n):
+    if n==0:
+        return 0
+    elif (n==1 ):
+        return 1
+    else:
+        return fiborec(n-1) + fiborec(n-2)
+        
+if __name__ == "__main__":
+    num = int(input("Enter a number :- "))
+    init = time.time()
+    #print(f"Using recursions of fib ({num}) | is {fiborec(num)}")
+    print(f"Using recursions of fib ({num}) | is {fibononrec(num)}")
+    print(f"It took {time.time() - init} seconds" )
+        
