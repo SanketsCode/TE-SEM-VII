@@ -6,29 +6,47 @@ Dataset link: https://www.kaggle.com/datasets/yasserh/uber-fares-dataset
 Code
 
 
-#importing libraries
+
+
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sb
 
 
-# reading the data set
+
+
+
 uber = pd.read_csv('/Users/admin/Desktop/7 sem/machine learning/practical/dataset/uber.csv')
 uber.head()
+
+
+
+
 
 
 uber.info()
 
 
+
+
+
 uber.describe()
+
+
+
 
 
 uber.isna().sum()
 
 
-# removing missing values
+
+
+
+
 def replacer(df):
+    import pandas as pd
     Q = pd.DataFrame(df.isna().sum(),columns=["CT"])
     W = Q[Q.CT > 0].index
     for i in W:
@@ -40,18 +58,30 @@ def replacer(df):
             df[i] = df[i].fillna(x)
 
 
+
+
+
+
 replacer(uber)
+
+
+
+
 
 
 uber.isna().sum()
 
 
-# Removing unwanted columns
+
+
+
 uber_2 = uber.drop(['Unnamed: 0','key'],axis=1)
 uber_2.dropna(axis=0,inplace=True)
 
 
-# Creating function for convering degree to radian 
+
+
+
 def haversine (lon_1, lon_2, lat_1, lat_2):
     
     lon_1, lon_2, lat_1, lat_2 = map(np.radians, [lon_1, lon_2, lat_1, lat_2])  #Degrees to Radians
@@ -67,44 +97,78 @@ def haversine (lon_1, lon_2, lat_1, lat_2):
     return km
 
 
+
+
+
+
+
 uber_2['Distance']= haversine(uber_2['pickup_longitude'],uber_2['dropoff_longitude'],
                              uber_2['pickup_latitude'],uber_2['dropoff_latitude'])
 uber_2['Distance'] = uber_2['Distance'].astype(float).round(2)    # Round-off Optional
+
+
+
+
 
 
 uber_2.head()
 
 
 
+
+
+
 sb.boxplot(uber_2["Distance"])
+
+
+
+
 
 
 uber_2['zscore'] = ( uber_2.Distance - uber_2.Distance.mean() ) / uber_2.Distance.std()
 uber_2.head(5)
 
 
+
+
+
 uber_2[uber_2['zscore']>3]
+
+
+
 
 
 uber_2[(uber_2.zscore<-3) | (uber_2.zscore>3)]
 
 
-# Remove the outliers and produce new dataframe
+
+
+
 df_no_outliers = uber_2[(uber_2.zscore>-3) & (uber_2.zscore<3)]
 df_no_outliers.head()
+
+
 
 
 df_no_outliers.shape
 
 
+
+
+
 uber_2.shape
 
 
-#Distance vs Fare Amount
+
+
+
 
 plt.scatter(uber_2['Distance'], uber_2['fare_amount'])
 plt.xlabel("Distance")
 plt.ylabel("fare_amount")
+
+
+
 
 
 uber_2.drop(uber_2[uber_2['Distance'] > 60].index, inplace = True)
@@ -113,11 +177,19 @@ uber_2.drop(uber_2[uber_2['fare_amount'] == 0].index, inplace = True)
 uber_2.drop(uber_2[uber_2['fare_amount'] < 0].index, inplace = True)
 
 
+
+
+
 uber_2.drop(uber_2[(uber_2['fare_amount']>100) & (uber_2['Distance']<1)].index, inplace = True )
 uber_2.drop(uber_2[(uber_2['fare_amount']<100) & (uber_2['Distance']>100)].index, inplace = True )
 
 
+
+
+
 uber_2.info()
+
+
 
 
 plt.scatter(uber_2['Distance'], uber_2['fare_amount'])
@@ -125,10 +197,10 @@ plt.xlabel("Distance")
 plt.ylabel("fare_amount")
 
 
-#Separating the date and time into separate columns for more usability.
+
+
 
 uber_2['pickup_datetime'] = pd.to_datetime(uber_2['pickup_datetime'])
-
 uber_2['Year'] = uber_2['pickup_datetime'].apply(lambda time: time.year)
 uber_2['Month'] = uber_2['pickup_datetime'].apply(lambda time: time.month)
 uber_2['Day'] = uber_2['pickup_datetime'].apply(lambda time: time.day)
@@ -140,77 +212,24 @@ uber_2['Day of Week'] = uber_2['Day of Week'].map(day_map)
 uber_2['counter'] = 1
 
 
-#Creating separate coumns for pickup and droppoff coordinates for more usability.
+
+
+
 
 uber_2['pickup'] = uber_2['pickup_latitude'].astype(str) + "," + uber_2['pickup_longitude'].astype(str)   
 uber_2['drop off'] = uber_2['dropoff_latitude'].astype(str) + "," + uber_2['dropoff_longitude'].astype(str)
 
 
-#Data Visualizations
-#Finding the trends in the data variables
-
-no_of_trips = []
-year = [2009, 2010, 2011, 2012, 2013, 2014, 2015]
-colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd',
-          '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
-for i in range(2009, 2016):
-    x = uber_2.loc[uber_2['Year'] == i, 'counter'].sum()
-    no_of_trips.append(x)
-print("Average trips a year: ")
-print(year, no_of_trips)
-plt.bar(year, no_of_trips, color=colors)
 
 
-no_of_trips = []
-month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd',
-          '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
-for i in range(1, 13):
-    x = uber_2.loc[uber_2['Month'] == i, 'counter'].sum()
-    no_of_trips.append(x)
-print("Average trips a Month: ")
-print(month, no_of_trips)
-plt.bar(month, no_of_trips, color=colors)
-
-
-#Average Daily Trips
-
-no_of_trips = []
-day = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd',
-          '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
-for i in range(0, 7):
-    x = uber_2.loc[uber_2['Day of Week_num'] == i, 'counter'].sum()
-    no_of_trips.append(x)
-print("Average trips by Days: ")
-print(day, no_of_trips)
-plt.bar(day, no_of_trips, color=colors)
-
-
-#Rides vs Time
-#Relation between average number of rides over a period of time.
-
-year_vs_trips = uber_2.groupby(['Year','Month']).agg( 
-    no_of_trips = ('counter','count'),
-    Average_fair = ('fare_amount','mean'),
-    Total_fair = ('fare_amount','sum'),
-    Avg_distance = ( 'Distance', 'mean')).reset_index()
-year_vs_trips['avg_no_of_trips'] = year_vs_trips['no_of_trips']/30
-year_vs_trips['month_year'] = year_vs_trips['Month'].astype(str) +", "+ year_vs_trips['Year'].astype(str)
-year_vs_trips = year_vs_trips.reset_index()
-year_vs_trips.head()
-year_vs_trips.plot(kind='line',x='month_year',y='no_of_trips', xlabel='January, 2009 - June, 2015',
-    ylabel='No of Trips', title='No of trips vs Months')
-
-
-#Heat-Map
-#A heat map to illustrate at what time of day and week, people are using Uber the most.
 
 import seaborn as sns
 df_1 = uber_2[['Distance', 'Day of Week_num', 'Hour']].copy()
 df_h = df_1.copy()
 df_h = df_h.groupby(['Hour', 'Day of Week_num']).mean()
 df_h = df_h.unstack(level=0)
+
+
 
 
 fig, ax = plt.subplots(figsize=(24, 7))
@@ -228,6 +247,8 @@ plt.title(title, fontdict={'fontsize': 25})
 plt.show()
 
 
+
+
 plt.figure(figsize=[8,4])
 sns.distplot(uber_2['fare_amount'], color='g',hist_kws=dict(edgecolor="black", linewidth=2), bins=30)
 plt.title('Target Variable Distribution')
@@ -235,10 +256,7 @@ plt.show()
 
 
 
-#Statistics
-#Some general statistical information about the data
 
-#Fare Amount
 
 import statistics as st
 print("Mean of fare prices is % s "
@@ -249,7 +267,9 @@ print("Standard Deviation of Fare Prices is % s "
                 % (st.stdev(uber_2['fare_amount'])))
 
 
-#Distance
+
+
+
 import statistics as st
 print("Mean of Distance is % s "
          % (st.mean(uber_2['Distance'])))
@@ -259,19 +279,21 @@ print("Standard Deviation of Distance is % s "
                 % (st.stdev(uber_2['Distance'])))
 
 
-#Coorelation Matrix
-#To find the two variables that have the most inter-dependence
+
+
 
 corr = uber_2.corr()
 corr.style.background_gradient(cmap='BuGn')
 
 
-#Standardization
-#For more accurate results on our linear regression model
+
+
 
 
 X = uber_2['Distance'].values.reshape(-1, 1)        #Independent Variable
 y = uber_2['fare_amount'].values.reshape(-1, 1)     #Dependent Variable
+
+
 
 
 from sklearn.preprocessing import StandardScaler
@@ -282,15 +304,15 @@ x_std = std.fit_transform(X)
 print(x_std)
 
 
-#Splitting the Dataset
-#Training and Test Set
+
+
 
 from sklearn.model_selection import train_test_split
 X_train, X_test, y_train, y_test = train_test_split(x_std, y_std, test_size=0.2, random_state=0)
 
 
-#Simple Linear Regression
-#Training the simple linear regression model on the training set
+
+
 
 from sklearn.linear_model import LinearRegression
 l_reg = LinearRegression()
@@ -299,15 +321,16 @@ print("Training set score: {:.2f}".format(l_reg.score(X_train, y_train)))
 print("Test set score: {:.7f}".format(l_reg.score(X_test, y_test)))
 
 
-#Actual vs Predicted Values
+
+
 y_pred = l_reg.predict(X_test)
 df = {'Actual': y_test, 'Predicted': y_pred}
 from tabulate import tabulate
 print(tabulate(df, headers = 'keys', tablefmt = 'psql'))
 
 
-#Accuracy Checking
-#Finding the MSE,MAE, RMSE, etc
+
+
 
 
 from sklearn import metrics
@@ -317,10 +340,14 @@ print('Mean Squared Error:', metrics.mean_squared_error(y_test, y_pred))
 print('Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(y_test, y_pred)))
 
 
-#Plotting the Graph
+
+
 
 print(l_reg.intercept_)
 print(l_reg.coef_)
+
+
+
 
 
 plt.subplot(2, 2, 1)
@@ -339,4 +366,53 @@ plt.tight_layout()
 plt.rcParams["figure.figsize"] = (32,22)
 plt.show()
 
+
+
+
+
+
+from sklearn.ensemble import RandomForestRegressor
+rfc = RandomForestRegressor(random_state=21)
+rfc.fit(X_train, y_train)
+print("Training set score: {:.2f}".format(rfc.score(X_train, y_train)))
+print("Test set score: {:.7f}".format(rfc.score(X_test, y_test)))
+
+
+
+
+
+y_pred = rfc.predict(X_test)
+df = {'Actual': y_test, 'Predicted': y_pred}
+from tabulate import tabulate
+print(tabulate(df, headers = 'keys', tablefmt = 'psql'))
+
+
+
+
+
+print('Mean Absolute Error:', metrics.mean_absolute_error(y_test, y_pred))
+print('R2_score:',metrics.r2_score(y_test, y_pred))
+print('Mean Squared Error:', metrics.mean_squared_error(y_test, y_pred))
+print('Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(y_test, y_pred)))
+
+
+
+
+
+plt.subplot(2, 2, 1)
+plt.scatter(X_train, y_train, color = 'red')
+plt.plot(X_train, rfc.predict(X_train), color ="blue")
+plt.title("Fare vs Distance (Training Set)")
+plt.ylabel("fare_amount")
+plt.xlabel("Distance")
+plt.subplot(2, 2, 2)
+plt.scatter(X_test, y_test, color = 'red')
+plt.plot(X_train, rfc.predict(X_train), color ="blue")
+plt.ylabel("fare_amount")
+plt.xlabel("Distance")
+plt.title("Fare vs Distance (Test Set)")
+
+plt.tight_layout()
+plt.rcParams["figure.figsize"] = (32,22)
+plt.show()
 
